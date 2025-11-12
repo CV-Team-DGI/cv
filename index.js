@@ -2,6 +2,80 @@
 let certifications = [];
 let experiences = [];
 let educations = [];
+let profilePhotoData = null; // Store photo as base64 data URL
+
+// Profile Photo Upload Handler
+const profilePhotoInput = document.getElementById('profilePhoto');
+const photoPreview = document.getElementById('photoPreview');
+const photoPreviewImg = document.getElementById('photoPreviewImg');
+const removePhotoBtn = document.getElementById('removePhoto');
+
+if (profilePhotoInput) {
+  profilePhotoInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          // Create canvas to resize to passport size (35mm x 45mm ≈ 100px x 130px at 72dpi)
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Passport size dimensions in pixels (approximation)
+          const passportWidth = 100;
+          const passportHeight = 130;
+          
+          canvas.width = passportWidth;
+          canvas.height = passportHeight;
+          
+          // Calculate scaling to fill the passport size (cover mode)
+          const imgRatio = img.width / img.height;
+          const passportRatio = passportWidth / passportHeight;
+          
+          let drawWidth, drawHeight, offsetX, offsetY;
+          
+          if (imgRatio > passportRatio) {
+            // Image is wider than passport ratio
+            drawHeight = passportHeight;
+            drawWidth = img.width * (passportHeight / img.height);
+            offsetX = -(drawWidth - passportWidth) / 2;
+            offsetY = 0;
+          } else {
+            // Image is taller than passport ratio
+            drawWidth = passportWidth;
+            drawHeight = img.height * (passportWidth / img.width);
+            offsetX = 0;
+            offsetY = -(drawHeight - passportHeight) / 2;
+          }
+          
+          // Draw the image centered and cropped
+          ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+          
+          // Convert to data URL
+          profilePhotoData = canvas.toDataURL('image/jpeg', 0.9);
+          
+          // Show preview
+          photoPreviewImg.src = profilePhotoData;
+          photoPreview.style.display = 'block';
+        };
+        img.src = event.target.result;
+      };
+      
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+if (removePhotoBtn) {
+  removePhotoBtn.addEventListener('click', function() {
+    profilePhotoData = null;
+    profilePhotoInput.value = '';
+    photoPreview.style.display = 'none';
+    photoPreviewImg.src = '';
+  });
+}
 
 // Simple tab panel visibility management - no active state manipulation
 const tabs = document.querySelector('md-tabs');
@@ -309,11 +383,22 @@ generateBtn.addEventListener('click', () => {
     const leftMargin = 20;
     const pageWidth = 190;
 
+    // Add profile photo if available (top right corner)
+    if (profilePhotoData) {
+        const photoWidth = 25;  // 25mm width
+        const photoHeight = 32; // 32mm height (passport proportion)
+        const photoX = pageWidth - photoWidth + 15; // Position at right
+        const photoY = yPos;
+        
+        doc.addImage(profilePhotoData, 'JPEG', photoX, photoY, photoWidth, photoHeight);
+    }
+
     // Header - Name with theme color
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(26);
     doc.setTextColor(selectedColor.primary[0], selectedColor.primary[1], selectedColor.primary[2]);
-    doc.text(fullName, leftMargin, yPos);
+    const nameMaxWidth = profilePhotoData ? 130 : pageWidth - leftMargin; // Adjust width if photo exists
+    doc.text(fullName, leftMargin, yPos, { maxWidth: nameMaxWidth });
     doc.setTextColor(0, 0, 0);
     yPos += 8;
 
@@ -322,14 +407,24 @@ generateBtn.addEventListener('click', () => {
     doc.setFontSize(10);
     let contactInfo = [email, phone, address].filter(item => item).join(' | ');
     if (contactInfo) {
-        doc.text(contactInfo, leftMargin, yPos);
+        const contactMaxWidth = profilePhotoData ? 130 : pageWidth - leftMargin;
+        doc.text(contactInfo, leftMargin, yPos, { maxWidth: contactMaxWidth });
         yPos += 5;
     }
     if (linkedin) {
         doc.setTextColor(selectedColor.secondary[0], selectedColor.secondary[1], selectedColor.secondary[2]);
-        doc.text(linkedin, leftMargin, yPos);
+        const linkedinMaxWidth = profilePhotoData ? 130 : pageWidth - leftMargin;
+        doc.text(linkedin, leftMargin, yPos, { maxWidth: linkedinMaxWidth });
         doc.setTextColor(0, 0, 0);
         yPos += 5;
+    }
+
+    // Adjust yPos if photo is taller than header content
+    if (profilePhotoData) {
+        const photoEndY = 20 + 32; // photoY + photoHeight
+        if (yPos < photoEndY) {
+            yPos = photoEndY + 2;
+        }
     }
 
     yPos += 3;

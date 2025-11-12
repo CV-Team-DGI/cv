@@ -99,7 +99,28 @@
             <md-filled-text-field label="Phone" id="phone" type="tel" required class="nav-field"></md-filled-text-field>
           </div>
           <md-filled-text-field label="Address" id="address" style="width: 100%" class="nav-field"></md-filled-text-field>
-          <md-filled-text-field label="LinkedIn (optional)" id="linkedin" style="width: 100%" class="nav-field" data-last-field="true" data-next-tab="experience"></md-filled-text-field>
+          <md-filled-text-field label="LinkedIn (optional)" id="linkedin" style="width: 100%" class="nav-field"></md-filled-text-field>
+          
+          <!-- Photo Upload Section -->
+          <div class="photo-upload-section" style="margin-top: 1.5rem; margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">
+              <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 20px; margin-right: 4px;">photo_camera</span>
+              Profile Photo (Optional)
+            </label>
+            <div style="display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 200px;">
+                <input type="file" id="profilePhoto" accept="image/*" style="display: block; padding: 0.5rem; border: 2px dashed var(--border-color); border-radius: 8px; width: 100%; cursor: pointer; background-color: var(--surface-color);">
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.4;">
+                  <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 14px; color: #f57c00;">warning</span>
+                  <strong>Recommended:</strong> Use a passport-size photo (35mm x 45mm) for best results. The image will be automatically resized to passport dimensions.
+                </p>
+              </div>
+              <div id="photoPreview" style="display: none; position: relative;">
+                <img id="photoPreviewImg" style="width: 100px; height: 130px; object-fit: cover; border-radius: 4px; border: 2px solid var(--border-color);">
+                <button id="removePhoto" type="button" style="position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; background-color: #ba1a1a; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;">×</button>
+              </div>
+            </div>
+          </div>
           
           <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
             <md-filled-button class="next-tab-btn" data-next-tab="experience">
