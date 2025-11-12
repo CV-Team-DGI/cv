@@ -87,7 +87,7 @@ See the LICENSE page in the app for full license details.
 ## 🔗 Links
 
 - **Live Demo**: [https://cv-team-dgi.github.io](https://cv-team-dgi.github.io)
-- **Repository**: [https://github.com/CV-Team-DGI/CV-Team-DGI.github.io](https://github.com/CV-Team-DGI/cv)
+- **Repository**: [https://github.com/CV-Team-DGI/cv](https://github.com/CV-Team-DGI/cv)
 
 ## 📧 Contact
 
