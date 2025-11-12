@@ -616,6 +616,30 @@ select option {
   white-space: nowrap;
 }
 
+.team-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.team-github-link:hover {
+  color: var(--md-sys-color-primary-container);
+  text-decoration: underline;
+}
+
+.team-github-link svg {
+  transition: transform 0.2s ease;
+}
+
+.team-github-link:hover svg {
+  transform: scale(1.2);
+}
+
 @media (max-width: 640px) {
   .logo-header {
     margin-bottom: 1rem;
